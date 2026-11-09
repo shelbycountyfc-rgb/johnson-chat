@@ -20,6 +20,7 @@ _UPLOAD-ME.zip
 # Runtime JSON/state and call records
 api/*.json
 api/calls/
+api/messages/
 
 # Apache test output
 /tests/apache/*.log
