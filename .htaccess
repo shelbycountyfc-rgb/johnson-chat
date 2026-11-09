@@ -1,0 +1,32 @@
+# Block sensitive directories and files.
+# Patterns are case-insensitive because Windows filesystems are.
+RedirectMatch 404 (?i)^/\.git(?:/|$)
+RedirectMatch 404 (?i)^/\.freebuff(?:/|$)
+RedirectMatch 404 (?i)^/api/data(?:/|$)
+RedirectMatch 404 (?i)^/api/messages(?:/|$)
+RedirectMatch 404 (?i)^/api/.*\.json$
+RedirectMatch 404 (?i)^/api/debug_log\.txt$
+RedirectMatch 404 (?i)^/logs(?:/|$)
+RedirectMatch 404 (?i)^/mail_log(?:/|$)
+RedirectMatch 404 (?i)^/private_messages(?:/|$)
+RedirectMatch 404 (?i)^/storage(?:/|$)
+RedirectMatch 404 (?i)^/uploads(?:/|$)
+RedirectMatch 404 (?i)^/webalizer(?:/|$)
+RedirectMatch 404 (?i)^/tests(?:/|$)
+RedirectMatch 404 (?i)^/\.ht[^/]*$
+
+# Deny methods the application never uses. TRACE cannot be disabled from
+# .htaccess; set TraceEnable Off in the Apache virtual host.
+<LimitExcept GET POST HEAD OPTIONS>
+    Require all denied
+</LimitExcept>
+
+# Security headers (always: also on 4xx/5xx error responses)
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+    Header always set Strict-Transport-Security "max-age=31536000" env=HTTPS
+</IfModule>

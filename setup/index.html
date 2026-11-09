@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup - Chat App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="setup-screen">
+    <div class="setup-box">
+      <div class="setup-head">
+        <h1>Chat App Setup</h1>
+        <p>Configure your chat application in a few steps</p>
+      </div>
+
+      <div id="setup-progress" class="hidden">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-steps">
+          <span class="pstep" data-step="1">Requirements</span>
+          <span class="pstep" data-step="2">Database</span>
+          <span class="pstep" data-step="3">Admin</span>
+          <span class="pstep" data-step="4">Complete</span>
+        </div>
+      </div>
+
+      <!-- Step 1: Requirements -->
+      <div id="step-1" class="setup-step">
+        <div class="step-hdr">
+          <span class="step-num">1</span>
+          <h2>System Requirements</h2>
+        </div>
+        <p>Checking PHP version, extensions, and file permissions.</p>
+        <div id="req-grid" class="req-grid"></div>
+        <div class="step-actions">
+          <button id="req-check-btn" class="btn">Check Requirements</button>
+          <button id="req-next-btn" class="btn btn-primary hidden">Continue</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Database -->
+      <div id="step-2" class="setup-step hidden">
+        <div class="step-hdr">
+          <span class="step-num">2</span>
+          <h2>Database Setup</h2>
+        </div>
+        <p>Initialize the SQLite database and create all required tables.</p>
+        <div id="db-status" class="setup-msg"></div>
+        <div class="step-actions">
+          <button id="db-init-btn" class="btn btn-primary">Initialize Database</button>
+          <button id="db-next-btn" class="btn hidden">Continue</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Admin Account -->
+      <div id="step-3" class="setup-step hidden">
+        <div class="step-hdr">
+          <span class="step-num">3</span>
+          <h2>Admin Account</h2>
+        </div>
+        <p>Create the administrator account to manage the chat application.</p>
+        <div class="auth-form">
+          <input type="text" id="setup-username" placeholder="Admin Username" maxlength="20" autocomplete="off">
+          <input type="password" id="setup-password" placeholder="Password (min 4 characters)" autocomplete="new-password">
+          <input type="password" id="setup-confirm" placeholder="Confirm password">
+          <div id="setup-error" class="setup-msg error hidden"></div>
+          <div id="setup-success" class="setup-msg success hidden"></div>
+        </div>
+        <div class="step-actions">
+          <button id="setup-back-btn" class="btn">Back</button>
+          <button id="setup-create-btn" class="btn btn-primary">Create Admin Account</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Complete -->
+      <div id="step-4" class="setup-step hidden">
+        <div class="step-hdr">
+          <span class="step-num check-mark">&#10003;</span>
+          <h2>Setup Complete</h2>
+        </div>
+        <div id="complete-msg" class="setup-msg success">Your chat application is ready!</div>
+        <div id="complete-summary"></div>
+        <div class="step-actions">
+          <a href="/" class="btn btn-primary">Go to Chat</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

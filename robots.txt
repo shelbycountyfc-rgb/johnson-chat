@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Allow: /messnger.html
+Disallow: /api/
+Disallow: /setup/
+Disallow: /storage/
+Disallow: /logs/
+Disallow: /private_messages/
+Disallow: /webalizer/

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy — JohnsonChat</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23e94560'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>J</text></svg>">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #141a2c; color: #dfe6f2; line-height: 1.65; }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 40px 22px 70px; }
+    a { color: #4fc3f7; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; color: #e94560; text-decoration: none; }
+    .brand span { width: 30px; height: 30px; border-radius: 7px; background: #e94560; color: #fff; display: inline-flex;
+      align-items: center; justify-content: center; font-size: 17px; }
+    h1 { font-size: 30px; margin: 26px 0 6px; }
+    h2 { font-size: 18px; margin: 30px 0 8px; color: #fff; }
+    p, li { color: #b9c4d6; font-size: 15px; }
+    .updated { color: #7f8ba0; font-size: 13px; }
+    .back { display: inline-block; margin-top: 34px; }
+    .card { background: #1a2236; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px 20px; margin-top: 18px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="brand" href="messnger.html"><span>J</span>JohnsonChat</a>
+    <h1>Privacy</h1>
+    <p class="updated">Last updated: November 7, 2026</p>
+
+    <p>JohnsonChat is a self-hosted chat application. This page explains what the software stores and how it is used.</p>
+
+    <h2>What is stored</h2>
+    <ul>
+      <li><strong>Account details:</strong> username, email address, password hash, and any optional profile fields you add (name, age, state, city, description).</li>
+      <li><strong>Messages:</strong> public room messages, private messages, reactions, edits, and read cursors.</li>
+      <li><strong>Files:</strong> avatars and files you upload, plus a manifest of the uploader and file metadata.</li>
+      <li><strong>Session data:</strong> a random login token, its expiry, online presence, and the IP address of requests for rate limiting and abuse prevention.</li>
+      <li><strong>Preferences:</strong> your theme, accent color, and notification choice are stored in your browser's local storage, not on the server.</li>
+    </ul>
+
+    <h2>How it is used</h2>
+    <p>Data is used only to operate the chat: to sign you in, deliver messages and files, show presence and read state, and enforce moderation and rate limits. The software does not include analytics, advertising, or third-party tracking, and it does not sell data.</p>
+
+    <h2>Session-scoped messages</h2>
+    <div class="card">In this build, signing out removes the messages you sent, your private messages, and your uploads from the server. Other people's copies of what they saw may remain in their own chats until those are ended.</div>
+
+    <h2>Your choices</h2>
+    <p>You can edit or delete your own messages, clear your offline inbox, block other users, and delete your account from your profile. Deleting your account removes your account record, tokens, messages, blocks, read state, uploads, avatar, and your entries in friends and private-chat lists.</p>
+
+    <h2>Security</h2>
+    <p>Passwords are stored with PHP's password hashing. API requests use bearer tokens rather than cookies. Private rooms, uploads, call signaling, and game state are restricted to their members. No system is perfectly secure, so avoid sharing sensitive information in any chat.</p>
+
+    <h2>Contact</h2>
+    <p>This deployment is operated by the person who installed it. Contact them with privacy questions or data requests.</p>
+
+    <a class="back" href="messnger.html">&larr; Back to JohnsonChat</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+# Runtime data - contains user accounts, messages, and uploads. Never commit.
+api/data/
+api/mail_config.local.php
+uploads/
+private_messages/
+storage/
+mail_log/
+
+# Logs
+api/debug_log.txt
+logs/
+
+# OS junk
+Thumbs.db
+.DS_Store
+
+# Deploy artifact
+_UPLOAD-ME.zip
+
+# Runtime JSON/state and call records
+api/*.json
+api/calls/
+
+# Apache test output
+/tests/apache/*.log
+/tests/apache/httpd.pid
+
+# Agent metadata
+.freebuff/

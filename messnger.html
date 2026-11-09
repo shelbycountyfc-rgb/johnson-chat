@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
+  <title>JohnsonChat — Real-time Messaging</title>
+  <meta name="description" content="JohnsonChat real-time messaging app. Chat rooms, private messages, file sharing, and games.">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta property="og:title" content="JohnsonChat — Real-time Messaging">
+  <meta property="og:description" content="Fast, secure real-time chat with rooms, private messages, file sharing & games.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23e94560'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>J</text></svg>">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="JohnsonChat">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css?v=16">
+</head>
+<body>
+  <div id="auth-screen">
+    <div class="auth-box">
+      <h1>Chat App</h1>
+      <div class="tabs">
+        <button id="tab-login" class="tab active">Login</button>
+        <button id="tab-signup" class="tab">Sign Up</button>
+      </div>
+
+      <div id="login-form" class="auth-form">
+        <input type="text" id="login-username" placeholder="Username" maxlength="20" autofocus>
+        <input type="password" id="login-password" placeholder="Password">
+        <div id="login-error" class="auth-error hidden"></div>
+        <button id="login-btn">Login</button>
+        <button type="button" id="forgot-btn" class="link-btn">Forgot password?</button>
+      </div>
+
+      <div id="forgot-panel" class="auth-form hidden">
+        <h2>Reset Password</h2>
+        <div id="forgot-step1">
+          <p class="activation-hint">Enter your username or email.</p>
+          <input type="text" id="forgot-id" placeholder="Username or email" maxlength="100">
+          <div id="forgot-error" class="auth-error hidden"></div>
+          <button id="forgot-send-btn">Send Reset Link</button>
+        </div>
+        <div id="forgot-step2" class="hidden">
+          <p class="activation-hint">Reset link generated (in lieu of email).</p>
+          <div id="forgot-link-box" class="hidden">
+            <p id="forgot-link" class="activation-link"></p>
+          </div>
+          <button type="button" id="forgot-use-link" class="link-btn">Use this link to set a new password</button>
+        </div>
+        <div id="forgot-step3" class="hidden">
+          <input type="password" id="forgot-password" placeholder="New password" maxlength="72">
+          <input type="password" id="forgot-confirm" placeholder="Confirm new password" maxlength="72">
+          <div id="forgot-reset-error" class="auth-error hidden"></div>
+          <button id="forgot-reset-btn">Set New Password</button>
+        </div>
+        <button type="button" id="forgot-back" class="link-btn">Back to Login</button>
+      </div>
+
+      <div id="signup-form" class="auth-form hidden">
+        <div class="ip-display">Your IP: <span id="signup-ip">Detecting...</span></div>
+        <input type="text" id="signup-name" placeholder="Full Name (optional)" maxlength="50">
+        <input type="email" id="signup-email" placeholder="Email Address" maxlength="100">
+        <input type="text" id="signup-username" placeholder="Username" maxlength="20">
+        <input type="password" id="signup-password" placeholder="Password">
+        <input type="password" id="signup-confirm" placeholder="Confirm password">
+        <div id="signup-error" class="auth-error hidden"></div>
+        <div id="signup-success" class="auth-success hidden"></div>
+        <button id="signup-btn">Create Account</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="activation-screen" class="hidden">
+    <div class="auth-box">
+      <h1>Check Your Email</h1>
+      <p class="activation-text">We sent an activation link to:</p>
+      <p id="activation-email" class="activation-email"></p>
+      <p class="activation-hint">Click the link in the email to activate your account, then log in.</p>
+      <div id="activation-link-box" class="hidden">
+        <p class="activation-hint">Email not sent? Use this activation link:</p>
+        <p id="activation-link" class="activation-link"></p>
+      </div>
+      <div class="resend-wrap">
+        <input type="text" id="resend-id" placeholder="Username or email" maxlength="100">
+        <button id="resend-activation-btn">Resend activation link</button>
+        <div id="resend-error" class="auth-error hidden"></div>
+      </div>
+      <button id="back-to-login-btn">Back to Login</button>
+    </div>
+  </div>
+
+  <div id="chat-screen" class="hidden">
+    <div id="chat-header">
+      <div class="logo-mark">
+        <span class="logo-j">J</span>
+        <span class="logo-light">Chat</span>
+      </div>
+      <div id="room-section">
+        <select id="room-select"></select>
+        <button id="room-create-btn" title="Create a new room">+</button>
+        <button id="room-delete-btn" title="Delete this room" class="hidden">-</button>
+        <span id="room-unread-badge" class="room-unread-badge hidden"></span>
+      </div>
+      <span id="user-display"><img id="header-avatar" src="default-avatar.svg" alt=""> <strong id="display-username"></strong></span>
+      <button id="theme-btn" title="Toggle light/dark theme">&#127769;</button>
+      <button id="accent-btn" title="Accent color"></button>
+      <button id="msg-search-btn" title="Search messages">&#128269;</button>
+      <button id="notify-btn" title="Desktop notifications">&#128276;</button>
+      <button id="mod-btn" class="hidden"><span id="mod-btn-label">Mod</span><span id="mod-badge" class="hidden"></span></button>
+      <button id="inbox-btn" title="Offline Messages">&#9993;<span id="inbox-badge" class="hidden"></span></button>
+      <button id="users-toggle-btn" class="panel-toggle" title="Online users">&#128101;</button>
+      <button id="friends-toggle-btn" class="panel-toggle" title="Friends">&#127775;</button>
+      <button id="logout-btn">Logout</button>
+      <div id="window-controls">
+        <button id="win-min-btn" title="Minimize" aria-label="Minimize">&#8213;</button>
+        <button id="win-max-btn" title="Maximize" aria-label="Maximize">&#10233;</button>
+        <button id="win-close-btn" title="Close (log out)" aria-label="Close">&#10005;</button>
+      </div>
+    </div>
+    <div id="chat-body">
+      <div id="users-panel">
+        <div id="users-header">Online</div>
+        <input type="text" id="user-search" placeholder="Search user..." autocomplete="off">
+        <div id="users-list"></div>
+      </div>
+      <div id="chat-main">
+        <div id="mute-banner"></div>
+        <div id="pinned-bar" class="pinned-bar hidden"></div>
+        <div id="load-older-wrap" class="hidden"><button id="load-older-btn" type="button">&#8593; Load older messages</button></div>
+        <div id="messages"></div>
+        <div id="typing-indicator" class="typing-indicator hidden"></div>
+        <div id="reply-bar" class="reply-bar hidden">
+          <div class="reply-bar-text"><strong id="reply-bar-name"></strong><span id="reply-bar-preview"></span></div>
+          <button type="button" id="reply-cancel" title="Cancel reply">×</button>
+        </div>
+        <div id="input-area">
+          <textarea id="message-input" placeholder="Type a message..." maxlength="500" rows="2"></textarea>
+          <button id="upload-btn" title="Upload a file">&#128206;</button>
+          <input type="file" id="file-input" class="hidden">
+          <button id="send-btn">Send</button>
+        </div>
+      </div>
+      <div id="friends-panel">
+        <div id="friends-header">Friends <span id="friends-count" class="friends-count"></span></div>
+        <div id="friends-list"></div>
+        <div id="friends-actions">
+          <input type="text" id="friend-add-input" placeholder="Add by username..." maxlength="20">
+          <button id="friend-add-btn">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ctx-menu" class="hidden"></div>
+
+  <div id="req-notification" class="hidden">
+    <span id="req-text"></span>
+    <button id="req-accept">Accept</button>
+    <button id="req-decline">Decline</button>
+  </div>
+
+  <div id="inbox-panel" class="hidden">
+    <div id="inbox-header">
+      <span>Offline Messages</span>
+      <button id="inbox-close">x</button>
+    </div>
+    <div id="inbox-list"></div>
+    <div id="inbox-footer"><button id="inbox-clear">Clear All</button></div>
+  </div>
+
+  <div id="mod-modal" class="hidden">
+    <div id="mod-modal-content">
+      <div id="mod-modal-header">
+        <span>Moderation Panel</span>
+        <span id="mod-flag-count"></span>
+        <button id="mod-modal-close">x</button>
+      </div>
+      <button id="mod-dismiss-all" class="hidden">Dismiss All</button>
+      <div id="mod-flags-list"></div>
+    </div>
+  </div>
+
+  <div id="private-modal" class="hidden">
+    <div id="private-header">
+      <span id="private-title"></span>
+      <button id="private-call-btn" class="hidden" title="Video call">&#128249;</button>
+      <button id="private-games-btn" class="hidden" title="Games">&#127918;</button>
+      <button id="private-close">x</button>
+    </div>
+    <div id="private-messages"></div>
+    <div id="private-blocked" class="private-blocked hidden"></div>
+    <div id="private-typing" class="typing-indicator hidden"></div>
+    <div id="private-reply-bar" class="reply-bar hidden">
+      <div class="reply-bar-text"><strong id="private-reply-name"></strong><span id="private-reply-preview"></span></div>
+      <button type="button" id="private-reply-cancel" title="Cancel reply">×</button>
+    </div>
+    <div id="private-input-area">
+      <input type="text" id="private-input" placeholder="Type a private message..." maxlength="500">
+      <button id="private-send-btn">Send</button>
+    </div>
+  </div>
+
+  <div id="games-modal" class="hidden">
+    <div id="games-header">
+      <span>Games</span>
+      <button id="games-close">x</button>
+    </div>
+    <div id="games-body">
+      <div id="games-list">
+        <div class="game-card" data-game="tictactoe">
+          <span class="game-icon">&#10060;&#11093;</span>
+          <span class="game-name">Tic-Tac-Toe</span>
+          <span class="game-desc">Classic 3-in-a-row</span>
+        </div>
+        <div class="game-card" data-game="rockpaperscissors">
+          <span class="game-icon">&#9994;&#9996;&#9995;</span>
+          <span class="game-name">Rock Paper Scissors</span>
+          <span class="game-desc">Best of 3 rounds</span>
+        </div>
+        <div class="game-card" data-game="hangman">
+          <span class="game-icon">&#128517;</span>
+          <span class="game-name">Hangman</span>
+          <span class="game-desc">Guess the word</span>
+        </div>
+        <div class="game-card" data-game="connect4">
+          <span class="game-icon">&#128308;&#128309;</span>
+          <span class="game-name">Connect 4</span>
+          <span class="game-desc">4 in a row wins</span>
+        </div>
+        <div class="game-card" data-game="guessthenumber">
+          <span class="game-icon">&#127379;</span>
+          <span class="game-name">Guess the Number</span>
+          <span class="game-desc">Hot or cold</span>
+        </div>
+        <div class="game-card" data-game="dnd">
+          <span class="game-icon">&#128481;</span>
+          <span class="game-name">D&D Dungeon</span>
+          <span class="game-desc">Endless co-op adventure</span>
+        </div>
+        <div class="game-card" data-game="memory">
+          <span class="game-icon">&#129522;</span>
+          <span class="game-name">Memory Match</span>
+          <span class="game-desc">Find matching pairs</span>
+        </div>
+        <div class="game-card" data-game="higherlower">
+          <span class="game-icon">&#127183;</span>
+          <span class="game-name">Higher or Lower</span>
+          <span class="game-desc">Guess the next card</span>
+        </div>
+        <div class="game-card" data-game="wordscramble">
+          <span class="game-icon">&#128292;</span>
+          <span class="game-name">Word Scramble</span>
+          <span class="game-desc">Unscramble the letters</span>
+        </div>
+        <div class="game-card" data-game="diceduel">
+          <span class="game-icon">&#127922;&#127922;</span>
+          <span class="game-name">Dice Duel</span>
+          <span class="game-desc">Roll highest to win</span>
+        </div>
+        <div class="game-card" data-game="minesweeper">
+          <span class="game-icon">&#128163;</span>
+          <span class="game-name">Minesweeper</span>
+          <span class="game-desc">Clear the minefield</span>
+        </div>
+      </div>
+      <div id="game-board" class="hidden">
+        <div id="game-board-header">
+          <span id="game-board-title"></span>
+          <span id="game-board-status"></span>
+          <button id="game-board-back">&#8592; Back</button>
+        </div>
+        <div id="game-board-area"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="incoming-call" class="hidden">
+    <span id="incoming-text"></span>
+    <button id="incoming-accept">Accept</button>
+    <button id="incoming-decline">Decline</button>
+  </div>
+
+  <div id="call-modal" class="hidden">
+    <video id="remote-video" autoplay playsinline></video>
+    <video id="local-video" autoplay playsinline muted></video>
+    <div id="call-header-bar">
+      <span id="call-status"></span>
+    </div>
+    <div id="call-controls">
+      <button id="call-mute-btn" title="Mute microphone">&#127908;</button>
+      <button id="call-cam-btn" title="Turn camera on/off">&#127909;</button>
+      <button id="call-end-btn" title="End call">&#128233;</button>
+    </div>
+  </div>
+
+  <div id="room-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header"><span>Create Room</span><button id="room-modal-close">x</button></div>
+      <input type="text" id="room-name-input" placeholder="Room name" maxlength="30">
+      <label class="announce-check hidden" id="announce-check-wrap"><input type="checkbox" id="room-announce-check"> Announcement room (read-only, staff only)</label>
+      <div id="room-modal-error" class="auth-error hidden"></div>
+      <button id="room-modal-create">Create Room</button>
+    </div>
+  </div>
+
+  <div id="search-modal" class="modal-overlay hidden">
+    <div class="modal-box search-box">
+      <div class="modal-header"><span>Search Messages</span><button id="search-close">x</button></div>
+      <input type="text" id="search-input" placeholder="Search all messages..." maxlength="100" autocomplete="off">
+      <div id="search-results"></div>
+    </div>
+  </div>
+
+  <div id="lightbox" class="lightbox hidden">
+    <button id="lightbox-close" title="Close">x</button>
+    <img id="lightbox-img" alt="Preview">
+  </div>
+
+  <div id="profile-modal" class="hidden">
+    <div id="profile-content">
+      <button id="profile-close">x</button>
+      <div id="profile-body">
+        <div id="profile-avatar-section">
+          <img id="profile-avatar" src="default-avatar.svg" alt="Avatar">
+          <div id="profile-upload-section" class="hidden">
+            <input type="file" id="profile-upload-input" accept="image/jpeg,image/png,image/gif,image/webp" class="hidden">
+            <button id="profile-upload-btn">Change Picture</button>
+          </div>
+        </div>
+        <div id="profile-info">
+          <h2 id="profile-username"></h2>
+          <p id="profile-name"></p>
+          <p id="profile-role"></p>
+          <p id="profile-joined"></p>
+        </div>
+        <div id="profile-edit-section" class="hidden">
+          <label for="edit-name">Name</label>
+          <input type="text" id="edit-name" maxlength="50" placeholder="Full name">
+          <label for="edit-age">Age</label>
+          <input type="text" id="edit-age" maxlength="3" placeholder="Age">
+          <label for="edit-state">State</label>
+          <input type="text" id="edit-state" maxlength="2" placeholder="State (e.g. KY)">
+          <label for="edit-city">City</label>
+          <input type="text" id="edit-city" maxlength="50" placeholder="City">
+          <label for="edit-desc">Description</label>
+          <textarea id="edit-desc" maxlength="500" placeholder="Tell people about yourself..." rows="4"></textarea>
+          <div id="profile-edit-error" class="hidden"></div>
+          <button id="profile-save-btn">Save Changes</button>
+          <button id="profile-delete-btn" class="link-btn danger-link hidden">Delete Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="win-pill" class="hidden">&#128172; JohnsonChat &mdash; tap to restore</div>
+
+  <div id="panel-scrim" class="hidden"></div>
+
+  <div id="copyright-footer">
+    <a href="./" target="_blank" rel="noopener">© Johnson Script Design</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a><br>
+    If you like the chat system and would like to help keep it updated, please <a href="https://venmo.com/u/james-johnson-1882" target="_blank" rel="noopener">donate to @james-johnson-1882 on Venmo</a>
+  </div>
+
+  <script src="script.js?v=18"></script>
+</body>
+</html>
